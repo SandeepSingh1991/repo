@@ -1,29 +1,61 @@
-<h2>Videos</h2>
-<div id="videos"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Private Media Vault | Viewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <header class="topbar glass-card">
+      <div>
+        <p class="eyebrow">User dashboard</p>
+        <h1>Watch videos and view photos</h1>
+      </div>
+      <div class="topbar-actions">
+        <span id="sessionRoleBadge" class="badge">Protected session</span>
+        <button type="button" class="secondary-btn" id="logoutBtn">Logout</button>
+      </div>
+    </header>
 
-<h2>Photos</h2>
-<div id="photos"></div>
+    <main class="dashboard-grid viewer-grid">
+      <section class="glass-card tabs-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Folders</p>
+            <h2>Browse media</h2>
+          </div>
+        </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="app.js"></script>
+        <div class="tab-buttons">
+          <button type="button" class="tab-btn active" data-type="video">Videos</button>
+          <button type="button" class="tab-btn" data-type="photo">Photos</button>
+        </div>
 
-<script>
-loadContent();
+        <p class="helper-note">Videos should use Google Drive preview links like <code>/file/d/FILE_ID/preview</code>. Downloads are only discouraged in the browser, not fully blocked.</p>
+      </section>
 
-async function loadContent() {
-  const { data } = await supabase.from("content").select("*");
+      <section class="glass-card content-card">
+        <div class="section-head content-toolbar">
+          <div>
+            <p class="eyebrow">Protected content</p>
+            <h2 id="viewerHeading">Video folders</h2>
+          </div>
+          <span id="inactivityNotice" class="badge">Auto logout on inactivity</span>
+        </div>
 
-  let v = "", p = "";
+        <div id="viewerContent" class="folder-stack empty-state">
+          Loading content...
+        </div>
+      </section>
+    </main>
+  </div>
 
-  data.forEach(item => {
-    if (item.type === "video") {
-      v += `<iframe src="${item.url}" width="400"></iframe>`;
-    } else {
-      p += `<img src="${item.url}" width="200">`;
-    }
-  });
-
-  document.getElementById("videos").innerHTML = v;
-  document.getElementById("photos").innerHTML = p;
-}
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>

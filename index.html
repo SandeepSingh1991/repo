@@ -1,18 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Private Media Vault | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="auth-body">
+  <main class="auth-shell auth-shell-wide">
+    <section class="brand-panel glass-card">
+      <p class="eyebrow">Protected GitHub + Supabase Project</p>
+      <h1>Private media access with role-based login.</h1>
+      <p class="muted">
+        Users can only watch media, while the admin can manage Google Drive embed links for videos and photos.
+      </p>
+      <ul class="feature-list">
+        <li>Separate admin and user flows</li>
+        <li>Video and photo folders on the same portal</li>
+        <li>Auto logout on inactivity</li>
+        <li>Basic anti-download browser restrictions</li>
+      </ul>
+    </section>
 
-<h2>Login</h2>
+    <section class="auth-panel glass-card">
+      <div class="panel-header">
+        <p class="eyebrow">Sign in</p>
+        <h2>Open the secure portal</h2>
+      </div>
 
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
+      <form id="loginForm" class="form-grid">
+        <label>
+          <span>Email</span>
+          <input id="email" name="email" type="email" placeholder="admin@gmail.com" autocomplete="username" required>
+        </label>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="app.js"></script>
+        <label>
+          <span>Password</span>
+          <input id="password" name="password" type="password" placeholder="Enter password" autocomplete="current-password" required>
+        </label>
+
+        <button type="submit" class="primary-btn">Login</button>
+      </form>
+
+      <p id="authMessage" class="status-text" aria-live="polite"></p>
+      <div class="helper-box">
+        <p class="helper-title">Login not working?</p>
+        <ol class="helper-steps">
+          <li>Create the same email/password in <strong>Supabase Auth → Users</strong>.</li>
+          <li>Run <code>supabase-schema.sql</code> in <strong>Supabase SQL Editor</strong>.</li>
+          <li>Add the exact same email in <code>users_role</code>, for example <code>admin@gmail.com</code> or <code>user@gmail.com</code>.</li>
+          <li>Use Google Drive <code>/preview</code> links for videos.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="setup-panel glass-card">
+      <p class="eyebrow">Quick setup</p>
+      <h2>Before login, do these 3 steps in Supabase</h2>
+      <div class="setup-steps">
+        <article>
+          <h3>1. Auth user banao</h3>
+          <p class="muted">Supabase Dashboard → Authentication → Users → Add user. Example: <code>admin@gmail.com</code>.</p>
+        </article>
+        <article>
+          <h3>2. SQL run karo</h3>
+          <p class="muted">Repo ka <code>supabase-schema.sql</code> copy karke SQL Editor me run karo.</p>
+        </article>
+        <article>
+          <h3>3. Same email role me dalo</h3>
+          <p class="muted">Email mismatch hua to login ke baad role nahi milega. Auth email aur <code>users_role.email</code> same hona chahiye.</p>
+        </article>
+      </div>
+      <pre class="code-block">insert into public.users_role (email, role)
+values
+  ('admin@gmail.com', 'admin'),
+  ('user@gmail.com', 'user')
+on conflict (email) do update set role = excluded.role;</pre>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
 </body>
 </html>

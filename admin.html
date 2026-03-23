@@ -1,50 +1,93 @@
-<h2>Admin Panel</h2>
-
-<input id="title" placeholder="Title">
-
-<select id="type">
-  <option value="video">Video</option>
-  <option value="photo">Photo</option>
-</select>
-
-<input id="url" placeholder="Google Drive Embed Link">
-
-<button onclick="addContent()">Add</button>
-
-<div id="list"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="app.js"></script>
-<script>
-loadAdminContent();
-
-async function addContent() {
-  const title = document.getElementById("title").value;
-  const type = document.getElementById("type").value;
-  const url = document.getElementById("url").value;
-
-  await supabase.from("content").insert([{ title, type, url }]);
-  loadAdminContent();
-}
-
-async function loadAdminContent() {
-  const { data } = await supabase.from("content").select("*");
-
-  let html = "";
-  data.forEach(item => {
-    html += `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Private Media Vault | Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <header class="topbar glass-card">
       <div>
-        ${item.title}
-        <button onclick="deleteItem('${item.id}')">Delete</button>
+        <p class="eyebrow">Admin dashboard</p>
+        <h1>Manage private media library</h1>
       </div>
-    `;
-  });
+      <div class="topbar-actions">
+        <span id="sessionRoleBadge" class="badge">Checking role...</span>
+        <button type="button" class="secondary-btn" id="logoutBtn">Logout</button>
+      </div>
+    </header>
 
-  document.getElementById("list").innerHTML = html;
-}
+    <main class="dashboard-grid admin-grid">
+      <section class="glass-card form-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Admin controls</p>
+            <h2 id="formTitle">Add content</h2>
+          </div>
+        </div>
 
-async function deleteItem(id) {
-  await supabase.from("content").delete().eq("id", id);
-  loadAdminContent();
-}
-</script>
+        <form id="contentForm" class="form-grid">
+          <input id="contentId" type="hidden">
+
+          <label>
+            <span>Title</span>
+            <input id="title" type="text" placeholder="Lesson 01 / Event Album" required>
+          </label>
+
+          <label>
+            <span>Type</span>
+            <select id="type" required>
+              <option value="video">Video</option>
+              <option value="photo">Photo</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Folder label</span>
+            <input id="folder" type="text" placeholder="Videos / Photos / Featured" required>
+          </label>
+
+          <label>
+            <span>Google Drive preview/image URL</span>
+            <input id="url" type="url" placeholder="https://drive.google.com/file/d/FILE_ID/preview" required>
+          </label>
+
+          <label>
+            <span>Description</span>
+            <textarea id="description" rows="4" placeholder="Optional notes for this content"></textarea>
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="primary-btn" id="submitBtn">Save content</button>
+            <button type="button" class="ghost-btn" id="cancelEditBtn" hidden>Cancel edit</button>
+          </div>
+        </form>
+
+        <p id="adminMessage" class="status-text" aria-live="polite"></p>
+      </section>
+
+      <section class="glass-card list-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Library</p>
+            <h2>Existing media items</h2>
+          </div>
+          <span id="contentCount" class="badge">0 items</span>
+        </div>
+
+        <div id="adminList" class="admin-list empty-state">
+          Loading content...
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
