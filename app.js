@@ -1,5 +1,5 @@
 const supabase = window.supabase.createClient(
-  "domskxftgizjhsrvuxhj",
+  "https://domskxftgijzhsrvuxhj.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvbXNreGZ0Z2l6amhzcnZ1eGhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMzE4NjMsImV4cCI6MjA4OTgwNzg2M30.kb3ftTaSOPIdK8_6RLqTWPxfKYGNbmVqsI7_XQhP24w"
 );
 
