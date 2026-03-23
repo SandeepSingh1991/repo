@@ -1,0 +1,29 @@
+<h2>Videos</h2>
+<div id="videos"></div>
+
+<h2>Photos</h2>
+<div id="photos"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="app.js"></script>
+
+<script>
+loadContent();
+
+async function loadContent() {
+  const { data } = await supabase.from("content").select("*");
+
+  let v = "", p = "";
+
+  data.forEach(item => {
+    if (item.type === "video") {
+      v += `<iframe src="${item.url}" width="400"></iframe>`;
+    } else {
+      p += `<img src="${item.url}" width="200">`;
+    }
+  });
+
+  document.getElementById("videos").innerHTML = v;
+  document.getElementById("photos").innerHTML = p;
+}
+</script>

@@ -1,0 +1,50 @@
+<h2>Admin Panel</h2>
+
+<input id="title" placeholder="Title">
+
+<select id="type">
+  <option value="video">Video</option>
+  <option value="photo">Photo</option>
+</select>
+
+<input id="url" placeholder="Google Drive Embed Link">
+
+<button onclick="addContent()">Add</button>
+
+<div id="list"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="app.js"></script>
+<script>
+loadAdminContent();
+
+async function addContent() {
+  const title = document.getElementById("title").value;
+  const type = document.getElementById("type").value;
+  const url = document.getElementById("url").value;
+
+  await supabase.from("content").insert([{ title, type, url }]);
+  loadAdminContent();
+}
+
+async function loadAdminContent() {
+  const { data } = await supabase.from("content").select("*");
+
+  let html = "";
+  data.forEach(item => {
+    html += `
+      <div>
+        ${item.title}
+        <button onclick="deleteItem('${item.id}')">Delete</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("list").innerHTML = html;
+}
+
+async function deleteItem(id) {
+  await supabase.from("content").delete().eq("id", id);
+  loadAdminContent();
+}
+</script>
